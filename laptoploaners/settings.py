@@ -25,7 +25,7 @@ SECRET_KEY = '49ma!&2pdw!20$l^okvc53l5hm456&x9&@!234f@2kq+!x8ef_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["laptoploaners.herokuapp.com"]
+ALLOWED_HOSTS = ["127.0.0.1", "laptoploaners.herokuapp.com"]
 
 
 # Application definition
