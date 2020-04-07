@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ["127.0.0.1", "laptoploaners.herokuapp.com"]
 # Application definition
 
 INSTALLED_APPS = [
+    'loaners.apps.LoanersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
