@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  {% include "_modal.html" %}
+
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col">
+        <p class="text-primary"></p>
+        <h4>
+          <strong>1. Signup form</strong>
+        </h4>
+        <p>Sign up via Bootstrap modal.</p>
+        <div class="row">
+          <div class="col-12 mb-3">
+            <button class="signup-btn btn btn-primary" type="button" name="button">Sign up</button>
+          </div>
+        </div>
+        <h4>
+          <strong>2. Login form</strong>
+        </h4>
+        <p>Log in via Bootstrap modal. Sign up first.</p>
+        <div class="row">
+          <div class="col-12 mb-3">
+            {% if not user.is_anonymous %}
+              <span>
+                Your are logged in as
+                <strong>{{ user }}</strong>.
+              </span>
+              <a href="{% url 'logout' %}" class="logout-btn btn btn-danger" role="button">Log out</a>
+            {% else %}
+              <button class="login-btn btn btn-primary" type="button" name="button">Log in</button>
+            {% endif %}
+          </div>
+
+        </div>
+        <h4>
+          <strong>3. Administrative actions</strong>
+        </h4>
+        <p>Create, Read, Update and Delete models.</p>
+
+        <div class="row">
+          <div class="col-12 mb-3">
+            <button class="create-model btn btn-primary" type="button" name="button">
+              <span class="fa fa-plus mr-2"></span>Create model</button>
+          </div>
+          <div class="col-12 mb-3">
+            {% if models %}
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class="text-center" scope="col">#</th>
+                    <th class="text-center" scope="col">Name</th>
+                    <th class="text-center" scope="col">CPU</th>
+                    <th class="text-center" scope="col">RAM</th>
+                    <th class="text-center" scope="col">Hard Drive</th>
+                    <th class="text-center" scope="col">Screen</th>
+                    <th class="text-center" scope="col">Vendor</th>
+                    <th class="text-center" scope="col">Read / Update / Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for model in models %}
+                    <tr>
+                      <th class="text-center" scope="row">{{ forloop.counter }}</th>
+                      <td class="text-center">{{ model.name }}</td>
+                      <td class="text-center">{{ model.cpu }}</td>
+                      <td class="text-center">{{ model.ram }}</td>
+                      <td class="text-center">{{ model.hard_drive }}</td>
+                      <td class="text-center">{{ model.screen }}</td>
+                      <td class="text-center">{{ model.get_vendor_display }}</td>
+
+                      <td class="text-center">
+                        <button type="button" class="read-model btn btn-sm btn-primary" data-id="{% url 'read_model' model.pk %}">
+                          <span class="fa fa-eye"></span>
+                        </button>
+                        <button type="button" class="update-model btn btn-sm btn-primary" data-id="{% url 'update_model' model.pk %}">
+                          <span class="fa fa-pencil"></span>
+                        </button>
+                        <button type="button" class="delete-model btn btn-sm btn-danger" data-id="{% url 'delete_model' model.pk %}">
+                          <span class="fa fa-trash"></span>
+                        </button>
+                        <!--
+                        <button type="button" class="updatetest-model btn btn-sm btn-primary" data-id="{% url 'updatetest_model' model.pk %}">
+                          <span class="fa fa-pencil"></span>
+                        </button>
+
+                        !-->
+                        <!--<button type="button" class="delete-model btn btn-sm btn-danger" data-toggle="modal" data-target="#modal" data-id="{% url 'delete_model' model.pk %}"> <span class="fa fa-trash" aria-label="Delete"></span> </button>-->
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            {% else %}
+              <p class="no-models text-primary">No models added yet.</p>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+{% block extrascripts %}
+  <script type="text/javascript">
+    $(function () {
+      // Log in & Sign up buttons
+      $(".login-btn").modalForm({formURL: "{% url 'login' %}"});
+      $(".signup-btn").modalForm({formURL: "{% url 'signup' %}"});
+
+      // Create model button
+      $(".create-model").modalForm({formURL: "{% url 'create_model' %}"});
+
+      // Update model buttons
+      $(".update-model").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      });
+
+      // Update model buttons
+      $(".updatetest-model").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      });
+
+      // Read model buttons
+      $(".read-model").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      });
+
+      // Delete model buttons
+      $(".delete-model").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      })
+
+      // Hide message
+      $(".alert").fadeTo(2000, 500).slideUp(500, function(){
+        $(".alert").slideUp(500);
+      });
+
+    });
+  </script>
+{% endblock extrascripts %}

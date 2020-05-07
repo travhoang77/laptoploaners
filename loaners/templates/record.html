@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+  {% load django_bootstrap_breadcrumbs %}
+  {% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Loaners" "index_loaner" %}
+    {% breadcrumb name  "record" %}
+  {% endblock %}
+
+{% block content %}
+
+  {% include "_modal.html" %}
+
+  <div class="container mt-3" style="font-size: 75%;">
+    <div class="row">
+
+      <div class="col">
+                    <h5>
+         {% render_breadcrumbs %}
+         </h5>
+         <p>Activity Logs</p>
+          <div class="col-12 mb-3">
+            {% if records %}
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class="text-center kla-header" scope="col">#</th>
+                    <th class="text-center kla-header" scope="col">Date</th>
+                    <th class="text-center kla-header" scope="col">Action</th>
+                    <th class="text-center kla-header" scope="col">Borrower</th>
+                    <th class="text-center kla-header" scope="col">Technician</th>
+
+                    <th class="text-center kla-header" scope="col">Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for record in records %}
+                    <tr>
+                      <th class="text-center" scope="row">{{ forloop.counter }}</th>
+                      <td class="text-center">{{ record.action_date|date:'F-d-y h:i A' }}</td>
+                      <td class="text-center">
+                      {% if record.action == "CREATED" %}
+                        <strong style="color:green">{{ record.action }}</strong>
+                      {% elif record.action == "CHECK IN" %}
+                        <strong style="color:green">{{ record.action }}</strong>
+                      {% elif record.action == "CHECK OUT" %}
+                        <strong style="color:red">{{ record.action }}</strong>
+                      {% endif %}
+                      </td>
+                      <td class="text-center">{{ record.borrower }}</td>
+                      <td class="text-center">{{ record.technician }}</td>
+                       <td class="text-center">{{ record.notes }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+             {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+{% endblock content %}
+
+{% block extrascripts %}
+  <script type="text/javascript">
+    $(function () {
+
+
+    });
+  </script>
+{% endblock extrascripts %}

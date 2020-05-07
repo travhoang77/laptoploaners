@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  {% include "_modal.html" %}
+    {% load django_bootstrap_breadcrumbs %}
+    {% block breadcrumbs %}
+        {{ block.super }}
+        {% breadcrumb "Loaners" "index_loaner" %}
+    {% endblock %}
+  <div class="container mt-3" style="font-size: 75%;">
+    <div class="row">
+      <div class="col">
+
+        {% if user.is_staff == True %}
+       <h4>
+          <strong>Administrative actions</strong>
+        </h4>
+        <p>Create and Delete Loaners</p>
+
+        <div class="row">
+          <div class="col-12 mb-3">
+            <button class="create-loaner btn btn-primary" type="button" name="button">
+              <span class="fa fa-plus mr-2"></span>Create Loaner</button>
+          </div>
+        {% else %}
+          <h5>
+          {% render_breadcrumbs %}
+         </h5>
+         <p>Checkout and Checkin loaners</p>
+        {% endif %}
+        </div>
+
+          <div class="col-12 mb-3">
+            {% if loaners %}
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class="text-center kla-header" scope="col">#</th>
+                    <th class="text-center kla-header" scope="col">Name</th>
+                    <th class="text-center kla-header" scope="col">Model</th>
+                    <th class="text-center kla-header" scope="col">Service Ticket</th>
+                    <th class="text-center kla-header" scope="col">Date Out | Date In</th>
+                    <th class="text-center kla-header" scope="col">Borrower</th>
+                    <th class="text-center kla-header" scope="col">Tech Assigned</th>
+                    <th class="text-center kla-header" scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for loaner in loaners %}
+                    <tr>
+                      <th class="text-center" scope="row">{{ forloop.counter }}</th>
+                      <td class="text-center">{{ loaner.name }}</td>
+                      <td class="text-center"><a class="read-model" data-id="{% url 'read_model' loaner.model.pk %}" style="color:#007BFF; font-size:12px; cursor:pointer"> {{ loaner.model }}</a></td>
+                      <td class="text-center">{{ loaner.service_ticket }}</td>
+
+                      <td class="text-center">
+                        {% if loaner.checked_in == True %}
+                        <span style="font-weight:bold;color:green">Available</span>
+                        {% elif loaner.checked_out and not loaner.overdue %}
+                        <span style="font-weight:bold;color:red">{{ loaner.date_out|date:'M/d' }} &nbsp;| &nbsp;  {{ loaner.date_in|date:'M/d' }}</span>
+                        {% else %}
+                        <span style="font-weight:bold;color:red">Overdue</span>
+                        {% endif %}
+                      </td>
+                      <td class="text-center">{{ loaner.borrower }}</td>
+                      <td class="text-center">{{ loaner.technician }}</td>
+
+
+                      <td class="text-center">
+                         {% if loaner.checked_in  %}
+                        <button title="Checkout" type="button" class="checkout-loaner btn btn-sm btn-checkout" data-id="{% url 'checkout_loaner' loaner.pk %}">
+                          <span class="fa fa-check"></span>
+                        </button>
+                        {% elif loaner.checked_out or loaner.overdue %}
+                         <button title="Checkin" type="button" class="checkin-loaner btn btn-sm btn-danger" data-id="{% url 'checkin_loaner' loaner.pk %}">
+                          <span class="fa fa-check"></span>
+                        </button>
+                        {% endif %}
+                        <button title="History" type="button" class="btn btn-sm btn-primary" onclick="location.href='{% url 'record' loaner.pk %}'" >
+                          <span class="fa fa-eye"></span>
+                        </button>
+                        {% if user.is_staff == True %}
+                         <button title="History" type="button" class="delete-loaner btn btn-sm btn-danger" data-id="{% url 'delete_loaner' loaner.pk %}">
+                          <span class="fa fa-trash"></span>
+                        </button>
+                        {% endif %}
+                        <!--<button type="button" class="delete-loaner btn btn-sm btn-danger" data-toggle="modal" data-target="#modal" data-id="{% url 'delete_loaner' loaner.pk %}"> <span class="fa fa-trash" aria-label="Delete"></span> </button>-->
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            {% else %}
+              <p class="no-loaners text-primary">No loaners added yet.</p>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+{% block extrascripts %}
+  <script type="text/javascript">
+    $(function () {
+
+
+      // Create loaner button
+      $(".create-loaner").modalForm({formURL: "{% url 'create_loaner' %}"});
+
+      // Update loaner buttons
+      $(".update-loaner").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      });
+
+      // Read loaner buttons
+      $(".read-loaner").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      });
+
+      // Read model buttons
+      $(".read-model").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      });
+
+      // Delete loaner buttons
+      $(".delete-loaner").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      })
+
+      // Checkout loaner buttons
+       $(".checkout-loaner").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      })
+
+         // Checkout loaner buttons
+       $(".checkin-loaner").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      })
+
+      // Hide message
+      $(".alert").fadeTo(2000, 500).slideUp(500, function(){
+        $(".alert").slideUp(500);
+      });
+
+
+
+    });
+  </script>
+{% endblock extrascripts %}

@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import date
+from datetime import datetime, date
 
 class Model(models.Model):
     DELL = 1
@@ -27,13 +27,13 @@ class Loaner(models.Model):
 
     @property
     def overdue(self):
-        return self.checked_out and (self.date_in < date.today())
+        return self.checked_out and (datetime.date(self.date_in) < date.today())
 
     name = models.CharField(max_length=50)
     model = models.ForeignKey(Model, on_delete=models.CASCADE)
     service_ticket = models.CharField(max_length=50)
-    date_out = models.DateField(null=True, editable=True)
-    date_in = models.DateField(null=True, editable=True)
+    date_out = models.DateTimeField(null=True, editable=True)
+    date_in = models.DateTimeField(null=True, editable=True)
     borrower = models.CharField(max_length=50)
     technician = models.CharField(max_length=50)
     adapter_included = models.BooleanField(default=True)
@@ -41,3 +41,15 @@ class Loaner(models.Model):
 
     def __str__(self):
         return self.name
+
+class Record(models.Model):
+    CHECK_OUT = "CHECK OUT"
+    CHECK_IN = "CHECK IN"
+    CREATED = "CREATED"
+
+    loaner = models.ForeignKey(Loaner, on_delete=models.CASCADE)
+    action = models.CharField(max_length=50)
+    borrower = models.CharField(max_length=50)
+    technician = models.CharField(max_length=50)
+    action_date = models.DateTimeField(null=True, editable=True)
+    notes = models.CharField(max_length=1000)

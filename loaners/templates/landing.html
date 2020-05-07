@@ -1,0 +1,91 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+  {% include "_modal.html" %}
+{% if user.is_anonymous %}
+  <div class="container mt-3">
+    <div style="margin:auto;width:40%;">
+    <form method="post" action="">
+  {% csrf_token %}
+
+  <div class="modal-header">
+    <h3 class="modal-title">Log in</h3>
+  </div>
+
+  <div class="modal-body">
+
+    <div class=" mb-2">
+
+    </div>
+
+
+      <div class="form-group">
+        <label for="id_username">Username</label>
+        <input type="text" name="username" autofocus placeholder="Username" class="form-control" required id="id_username">
+        <div class="">
+
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="id_password">Password</label>
+        <input type="password" name="password" placeholder="Password" class="form-control" required id="id_password">
+        <div class="">
+
+        </div>
+      </div>
+
+  </div>
+
+  <div class="modal-footer">
+
+          <button class="signup-btn btn btn-primary" type="button" name="button">Sign up</button>
+          <button type="submit" class="submit-btn btn btn-primary" formnovalidate="formnovalidate">Log in</button>
+  </div>
+
+</form>
+  </div>
+    </div>
+{% endif %}
+{% endblock content %}
+
+{% block extrascripts %}
+  <script type="text/javascript">
+    $(function () {
+      // Log in & Sign up buttons
+      $(".login-btn").modalForm({formURL: "{% url 'login' %}"});
+      $(".signup-btn").modalForm({formURL: "{% url 'signup' %}"});
+
+      // Create model button
+      $(".create-model").modalForm({formURL: "{% url 'create_model' %}"});
+
+      // Update model buttons
+      $(".update-model").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      });
+
+      // Update model buttons
+      $(".updatetest-model").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      });
+
+      // Read model buttons
+      $(".read-model").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      });
+
+      // Delete model buttons
+      $(".delete-model").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      })
+
+      // Hide message
+      $(".alert").fadeTo(2000, 500).slideUp(500, function(){
+        $(".alert").slideUp(500);
+      });
+
+    });
+  </script>
+{% endblock extrascripts %}
