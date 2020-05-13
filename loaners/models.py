@@ -31,7 +31,6 @@ class Loaner(models.Model):
 
     name = models.CharField(max_length=50)
     model = models.ForeignKey(Model, on_delete=models.CASCADE)
-    service_ticket = models.CharField(max_length=50)
     date_out = models.DateTimeField(null=True, editable=True)
     date_in = models.DateTimeField(null=True, editable=True)
     borrower = models.CharField(max_length=50)

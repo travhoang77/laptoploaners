@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  {% include "_modal.html" %}
+    {% load django_bootstrap_breadcrumbs %}
+    {% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "Manage" "manage" %}
+    {% endblock %}
+
+    <div class="container mt-3" style="font-size: 75%;">
+    <div class="row">
+      <div class="col">
+        <p class="text-primary"></p>
+
+          <h5>
+          {% render_breadcrumbs %}
+        </h5>
+
+        <div class="row">
+          <div class="col-12 mb-3">
+            <button class="btn btn-primary" type="button" name="button" onclick="window.location.href = '/model' ">
+              <span class="fa fa-plus mr-2"></span>Models</button>&nbsp;
+              <button class="btn btn-primary" type="button" name="button" onclick="window.location.href = '/loaners' ">
+              <span class="fa fa-plus mr-2"></span>Loaners</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+{% block extrascripts %}
+  <script type="text/javascript">
+    $(function () {
+
+      // Hide message
+      $(".alert").fadeTo(2000, 500).slideUp(500, function(){
+        $(".alert").slideUp(500);
+      });
+
+    });
+  </script>
+{% endblock extrascripts %}

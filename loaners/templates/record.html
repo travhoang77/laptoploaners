@@ -2,6 +2,9 @@
   {% load django_bootstrap_breadcrumbs %}
   {% block breadcrumbs %}
     {{ block.super }}
+    {% if user.is_staff == True %}
+    {% breadcrumb "Manage" "manage" %}
+    {% endif %}
     {% breadcrumb "Loaners" "index_loaner" %}
     {% breadcrumb name  "record" %}
   {% endblock %}
@@ -55,6 +58,30 @@
               </table>
              {% endif %}
           </div>
+          <div class="col-12 mb-3">
+            {% if records.has_other_pages %}
+                <ul class="pagination">
+                  {% if records.has_previous %}
+                    <li><a href="?page={{ records.previous_page_number }}">&laquo;</a></li>
+                  {% else %}
+                    <li><a href="">&laquo;</a></li>
+                  {% endif %}
+                  {% for i in records.paginator.page_range %}
+                    {% if records.number == i %}
+                      <li><a class="active">{{i}}</a></li>
+                    {% else %}
+                      <li><a href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                  {% endfor %}
+                  {% if records.has_next %}
+                    <li><a href="?page={{ records.next_page_number }}">&raquo;</a></li>
+                  {% else %}
+                    <li><a href="">&raquo;</a></li>
+                  {% endif %}
+                </ul>
+            {% endif %}
+          </div>
+
         </div>
 
       </div>

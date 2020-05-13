@@ -6,7 +6,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
 
-<link rel="SHORTCUT ICON" href="http://www.kla-tencor.com/favicon.ico"></link>
+<link rel="SHORTCUT ICON" href="{% static 'assets/images/icon.png' %}"></link>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
 
@@ -56,6 +56,30 @@
         .logout {
 
         }
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.pagination li {display: inline;}
+
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+}
+
+ul.pagination li a.active {
+    background-color: #007BFF;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+
+ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 
       </style>
     {% endblock stylesheets %}

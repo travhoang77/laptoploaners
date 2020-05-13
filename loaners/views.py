@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseForbidden
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def landing(request):
     return render(request, 'loaners/landing.html')
@@ -23,7 +25,13 @@ def login_request(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}")
-                return redirect('/loaners')
+
+                #if user is staff redirect to manage page
+                if user.is_staff == True:
+                    return redirect('/manage')
+
+                else:
+                    return redirect('/loaners')
             else:
                 messages.error(request, "Invalid username or password.")
         else:
@@ -39,6 +47,12 @@ def logout_request(request):
     logout(request)
     messages.info(request, "Logged out successfully!")
     return redirect("main:homepage")
+
+def manage(request):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
+
+    return render(request, 'manage.html')
 
 from bootstrap_modal_forms.generic import (BSModalLoginView,
                                            BSModalCreateView,
@@ -57,6 +71,12 @@ class Index(LoginRequiredMixin,generic.ListView):
     context_object_name = 'models'
     template_name = 'index.html'
 
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return  HttpResponseForbidden()
+
+        models = Model.objects.all()
+        return render(request, self.template_name, {'models': models})
 
 
 class ModelCreateView(BSModalCreateView):
@@ -159,7 +179,18 @@ class LoanerDeleteView(BSModalDeleteView):
 def record(request, pk):
     loaner = Loaner.objects.get(pk=pk)
     name = loaner.name
-    records = loaner.record_set.all().order_by('-action_date')
+    record_list = loaner.record_set.all().order_by('-action_date')
+    #Pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(record_list, 100)
+
+    try:
+        records = paginator.page(page)
+    except PageNotAnInteger:
+        records = paginator.page(1)
+    except EmptyPage:
+        records = paginator.page(paginator.num_pages)
+
     context = {'name' : name, 'records' : records}
 
     return render(request, 'record.html', context)

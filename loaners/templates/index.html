@@ -4,60 +4,41 @@
 
   {% include "_modal.html" %}
 
-  <div class="container mt-3">
+    {% load django_bootstrap_breadcrumbs %}
+    {% block breadcrumbs %}
+        {{ block.super }}
+        {% breadcrumb "Manage" "manage" %}
+        {% breadcrumb "Models" "index" %}
+    {% endblock %}
+
+    <div class="container mt-3" style="font-size: 75%;">
     <div class="row">
       <div class="col">
-        <p class="text-primary"></p>
-        <h4>
-          <strong>1. Signup form</strong>
-        </h4>
-        <p>Sign up via Bootstrap modal.</p>
-        <div class="row">
-          <div class="col-12 mb-3">
-            <button class="signup-btn btn btn-primary" type="button" name="button">Sign up</button>
-          </div>
-        </div>
-        <h4>
-          <strong>2. Login form</strong>
-        </h4>
-        <p>Log in via Bootstrap modal. Sign up first.</p>
-        <div class="row">
-          <div class="col-12 mb-3">
-            {% if not user.is_anonymous %}
-              <span>
-                Your are logged in as
-                <strong>{{ user }}</strong>.
-              </span>
-              <a href="{% url 'logout' %}" class="logout-btn btn btn-danger" role="button">Log out</a>
-            {% else %}
-              <button class="login-btn btn btn-primary" type="button" name="button">Log in</button>
-            {% endif %}
-          </div>
 
-        </div>
-        <h4>
-          <strong>3. Administrative actions</strong>
-        </h4>
-        <p>Create, Read, Update and Delete models.</p>
+
+
 
         <div class="row">
           <div class="col-12 mb-3">
             <button class="create-model btn btn-primary" type="button" name="button">
-              <span class="fa fa-plus mr-2"></span>Create model</button>
+              <span class="fa fa-plus mr-2"></span>Create Model</button>
           </div>
+                  <h5>
+         {% render_breadcrumbs %}
+        </h5>
           <div class="col-12 mb-3">
             {% if models %}
               <table class="table">
                 <thead>
                   <tr>
-                    <th class="text-center" scope="col">#</th>
-                    <th class="text-center" scope="col">Name</th>
-                    <th class="text-center" scope="col">CPU</th>
-                    <th class="text-center" scope="col">RAM</th>
-                    <th class="text-center" scope="col">Hard Drive</th>
-                    <th class="text-center" scope="col">Screen</th>
-                    <th class="text-center" scope="col">Vendor</th>
-                    <th class="text-center" scope="col">Read / Update / Delete</th>
+                    <th class="text-center kla-header" scope="col">#</th>
+                    <th class="text-center kla-header" scope="col">Name</th>
+                    <th class="text-center kla-header" scope="col">CPU</th>
+                    <th class="text-center kla-header" scope="col">RAM</th>
+                    <th class="text-center kla-header" scope="col">Hard Drive</th>
+                    <th class="text-center kla-header" scope="col">Screen</th>
+                    <th class="text-center kla-header" scope="col">Vendor</th>
+                    <th class="text-center kla-header" scope="col">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -72,13 +53,15 @@
                       <td class="text-center">{{ model.get_vendor_display }}</td>
 
                       <td class="text-center">
+                        <!--
                         <button type="button" class="read-model btn btn-sm btn-primary" data-id="{% url 'read_model' model.pk %}">
                           <span class="fa fa-eye"></span>
                         </button>
-                        <button type="button" class="update-model btn btn-sm btn-primary" data-id="{% url 'update_model' model.pk %}">
+                        -->
+                        <button type="button" class="update-model btn btn-sm btn-primary" title="Update"  data-id="{% url 'update_model' model.pk %}">
                           <span class="fa fa-pencil"></span>
                         </button>
-                        <button type="button" class="delete-model btn btn-sm btn-danger" data-id="{% url 'delete_model' model.pk %}">
+                        <button type="button" class="delete-model btn btn-sm btn-danger" title="Delete" data-id="{% url 'delete_model' model.pk %}">
                           <span class="fa fa-trash"></span>
                         </button>
                         <!--
@@ -122,11 +105,6 @@
 
       // Update model buttons
       $(".updatetest-model").each(function () {
-        $(this).modalForm({formURL: $(this).data('id')});
-      });
-
-      // Read model buttons
-      $(".read-model").each(function () {
         $(this).modalForm({formURL: $(this).data('id')});
       });
 

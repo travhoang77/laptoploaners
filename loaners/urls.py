@@ -6,6 +6,8 @@ urlpatterns = [
     #path('', views.landing, name='landing'),
     path('', views.login_request, name="login_request"),
     path('logout-request', views.logout_request, name="logout_request"),
+    path('manage/', views.manage, name="manage"),
+
     #Model URLs
     path('model/', views.Index.as_view(), name='index'),
     path('create/', views.ModelCreateView.as_view(), name='create_model'),

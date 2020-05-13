@@ -5,30 +5,35 @@
   {% include "_modal.html" %}
     {% load django_bootstrap_breadcrumbs %}
     {% block breadcrumbs %}
+  {% if user.is_staff == True %}
+
+        {{ block.super }}
+        {% breadcrumb "Manage" "manage" %}
+        {% breadcrumb "Loaners" "index_loaner" %}
+
+  {% else %}
+
         {{ block.super }}
         {% breadcrumb "Loaners" "index_loaner" %}
+
+   {% endif %}
     {% endblock %}
   <div class="container mt-3" style="font-size: 75%;">
     <div class="row">
       <div class="col">
 
         {% if user.is_staff == True %}
-       <h4>
-          <strong>Administrative actions</strong>
-        </h4>
-        <p>Create and Delete Loaners</p>
-
+        
         <div class="row">
           <div class="col-12 mb-3">
             <button class="create-loaner btn btn-primary" type="button" name="button">
               <span class="fa fa-plus mr-2"></span>Create Loaner</button>
           </div>
-        {% else %}
+        {% endif %}
           <h5>
           {% render_breadcrumbs %}
          </h5>
-         <p>Checkout and Checkin loaners</p>
-        {% endif %}
+
         </div>
 
           <div class="col-12 mb-3">
@@ -39,7 +44,6 @@
                     <th class="text-center kla-header" scope="col">#</th>
                     <th class="text-center kla-header" scope="col">Name</th>
                     <th class="text-center kla-header" scope="col">Model</th>
-                    <th class="text-center kla-header" scope="col">Service Ticket</th>
                     <th class="text-center kla-header" scope="col">Date Out | Date In</th>
                     <th class="text-center kla-header" scope="col">Borrower</th>
                     <th class="text-center kla-header" scope="col">Tech Assigned</th>
@@ -52,7 +56,7 @@
                       <th class="text-center" scope="row">{{ forloop.counter }}</th>
                       <td class="text-center">{{ loaner.name }}</td>
                       <td class="text-center"><a class="read-model" data-id="{% url 'read_model' loaner.model.pk %}" style="color:#007BFF; font-size:12px; cursor:pointer"> {{ loaner.model }}</a></td>
-                      <td class="text-center">{{ loaner.service_ticket }}</td>
+
 
                       <td class="text-center">
                         {% if loaner.checked_in == True %}
@@ -99,7 +103,7 @@
 
       </div>
     </div>
-  </div>
+
 
 {% endblock content %}
 

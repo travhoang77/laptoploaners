@@ -99,7 +99,7 @@ class LoanerCheckoutForm(BSModalForm):
     class Meta:
         model = Loaner
         fields = ['borrower', 'date_in', 'adapter_included', 'date_out', 'technician', 'checked_in']
-        exclude = ['name', 'model','service_ticket', 'timestamp']
+        exclude = ['name', 'model', 'timestamp']
         labels = {
             'technician':'',
             'date_out':'',
@@ -137,7 +137,7 @@ class LoanerCheckinForm(BSModalForm):
 
     class Meta:
         model = Loaner
-        fields = ['date_in', 'date_out', 'checked_in', 'borrower', 'technician', 'adapter_included', 'service_ticket']
+        fields = ['date_in', 'date_out', 'checked_in', 'borrower', 'technician', 'adapter_included']
         exclude = [ 'timestamp']
         labels = {
             'technician' : '',
@@ -146,7 +146,7 @@ class LoanerCheckinForm(BSModalForm):
             'borrower' : '',
             'checked_in' : '',
             'adapter_included' : '',
-            'service_ticket' : '',
+
         }
 
         widgets = {
@@ -156,7 +156,7 @@ class LoanerCheckinForm(BSModalForm):
             'date_in' : forms.HiddenInput(),
             'borrower' : forms.HiddenInput(),
             'adapter_included' : forms.HiddenInput(),
-            'service_ticket' : forms.HiddenInput(),
+
         }
 
 class CustomUserCreationForm(PopRequestMixin, CreateUpdateAjaxMixin,
